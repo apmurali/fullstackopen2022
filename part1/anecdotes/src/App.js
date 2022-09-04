@@ -9,6 +9,9 @@ const Button = (props) => (
   </button>
 )
 
+const Header = ({header}) =>  <h1>{header}</h1>
+const Anecdote = ({anecdote}) => <p>{anecdote}</p>  
+const ShowMaxVotes = ({maxvotes}) => <p>has {maxvotes} votes</p>
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -32,18 +35,19 @@ const App = () => {
     newVotes[selected] +=1;
     setVotes(newVotes);
     console.log(votes)
+    
   }
   const maxVotes = Math.max(...votes);
   const maxVotedAnecdote = anecdotes[votes.indexOf(maxVotes)];
   return (
     <div>
-      <h1>Anecdote of the day</h1>
-      <p>{anecdotes[selected]}</p>
+      <Header header="Anecdote of the day" />
+      <Anecdote anecdote={anecdotes[selected]}/>
       <Button handleClick={incrementVote} text="vote" />
       <Button handleClick={getRandomAnecdote} text="next anecdote" />
-      <h1>Anecdote with most votes</h1>
-      <p>{maxVotedAnecdote}</p>
-      <p>has {maxVotes} votes</p>
+      <Header header="Anecdote with most votes"/>
+      <Anecdote anecdote={maxVotedAnecdote}/>
+      <ShowMaxVotes maxvotes={maxVotes} />
     </div>
   )
 }
