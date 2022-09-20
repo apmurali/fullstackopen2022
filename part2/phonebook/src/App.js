@@ -115,6 +115,7 @@ const App = () => {
     if (typeof event.target.value === 'string') {
       //console.log("you entered something in the text box")
       const filtered = peopleList.filter(person => person.name.toLowerCase().includes(event.target.value))
+      
       setFilteredNames(filtered);
       //console.log(filtered);
     }
