@@ -21,9 +21,19 @@
       "id": 4
     },
     {
-      "name": "Lucifer Morningstar",
-      "number": "666-123456",
+      "name": "l",
+      "number": 999999,
       "id": 5
+    },
+    {
+      "name": "ww",
+      "number": "9999",
+      "id": 6
+    },
+    {
+      "name": "Arto Mellas",
+      "number": "9999",
+      "id": 7
     }
   ]
 }
