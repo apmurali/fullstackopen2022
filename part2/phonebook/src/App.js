@@ -1,6 +1,65 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+//component for message
+const Notification = ({ usermessage }) => {
+  const messageStyle = {
+    background: '#dcedc8',
+    color: '33691e',
+    fontStyle: 'bold',
+    fontSize: 20,
+    padding: 10,
+    borderRadius:25,
+    borderColor: '#dcedc8',
+    borderStyle: 'solid',
+    borderWidth: 5,
+    marginBottom: 10
+  }
+
+
+
+  if (usermessage === null) {
+    //return null
+    return(
+      <div></div>
+    )
+  }
+
+  return (
+    <div style={messageStyle}>
+      {usermessage}
+    </div>
+  )
+}
+
+// an error notification
+const ErrorMessage = ({ errormessage }) => {
+
+  const errorStyle = {
+    background: '#ffc9bb',
+    color: '33691e',
+    fontStyle: 'bold',
+    fontSize: 20,
+    padding: 10,
+    borderRadius:25,
+    borderColor: '#ffc9bb',
+    borderStyle: 'solid',
+    borderWidth: 5,
+    marginBottom: 10
+  }
+  
+  if (errormessage === null) {
+    return null
+      }
+
+
+  return (
+    <div style={errorStyle}>
+      {errormessage}
+    </div>
+  )
+}
+
 //name filter
 const Filter = ({ filterEntry, handleFiltering }) => {
   return (
@@ -42,19 +101,7 @@ const Person = ({ person, deletePerson}) => {
     </li>
   )
 }
-/* 
-const Persons = ({ peopleList, removePerson(id) }) => {
-  return (
-    <div>
-      <ul>
-        {
-          peopleList.map(person =>
-            <Person key={person.id} person={person} onClick={removePerson(pers)}/>
-          )}
-      </ul>
-    </div>
-  )
-} */
+
 const App = () => {
   const [persons, setPersons] = useState([])
   //const [newPerson, setNewPerson] = useState('')
@@ -62,6 +109,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filteredNames, setFilteredNames] = useState([]) //filtered person details
   const [filterEntry, setFilterEntry] = useState('')  // the text in the filter text box
+  const [userMessage, setUserMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -92,7 +141,20 @@ const App = () => {
         .update(changePerson.id, personObject)
         .then(returnedPerson => {
           setPersons(persons.map(person => person.id !== changePerson.id ? person : returnedPerson))
+          
         })
+        .then(()=>{setUserMessage(`Updated entry for ${personObject.name}`)
+          setTimeout(() => {
+            setUserMessage(null)
+          }, 5000)})
+          .catch(error => {
+            setErrorMessage(
+              `An error occured`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)})
+          
       }
       else{
         console.log("ok. wont replace")
@@ -108,6 +170,17 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .then(()=>{setUserMessage(`Created a new entry for ${personObject.name}`)
+        setTimeout(() => {
+          setUserMessage(null)
+        }, 5000)})
+        .catch(error => {
+          setErrorMessage(
+            `An error occured`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)})
     }
   }
 
@@ -162,6 +235,17 @@ const App = () => {
       personService
       .remove(person.id)
       .then(setPersons(persons.filter(p => p.id !==person.id)))
+      .then(()=>{setUserMessage(`Deleted entry for ${person.name}`)
+          setTimeout(() => {
+            setUserMessage(null)
+          }, 5000)})
+      .catch(error => {
+        setErrorMessage(
+          `Information on ${person.name} has already been removed from the server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)})
        }
        else{
         console.log("canceled")
@@ -172,6 +256,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification usermessage={userMessage} />
+      <ErrorMessage errormessage={errorMessage} />
       <Filter filterEntry={filterEntry} handleFiltering={handleFiltering} />
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} handlePersonEntry={handlePersonEntry} newNumber={newNumber} handleNumberEntry={handleNumberEntry} />
